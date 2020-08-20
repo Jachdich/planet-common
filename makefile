@@ -15,6 +15,9 @@ obj/FastNoise.o: src/FastNoise.cpp
 install: common.a
 	cp common.a ../planet-client
 	cp common.a ../planet-server
+
+	rm -r ../planet-client/include/common
+	rm -r ../planet-server/include/common
 	cp -r include ../planet-client/include/common
 	cp -r include ../planet-server/include/common
 clean:

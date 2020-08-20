@@ -11,7 +11,9 @@ enum class ErrorCode {
 enum class TileType {
 	VOID,
 	GRASS,
+	BUSH,
 	TREE,
+	PINE,
 	WATER,
 	ROCK,
 	HOUSE,
