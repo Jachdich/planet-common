@@ -19,4 +19,8 @@ enum class TileType {
 	HOUSE,
 };
 
+enum class TaskType {
+	GATHER_MATERIALS,
+};
+
 #endif
