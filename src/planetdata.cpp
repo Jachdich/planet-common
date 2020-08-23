@@ -1,5 +1,7 @@
 #include "planetdata.h"
 #include "enums.h"
+#include "tile.h"
+
 class PlanetSurface;
 PlanetData::PlanetData() {}
 PlanetData::PlanetData(PlanetSurface * surface) {
@@ -7,7 +9,7 @@ PlanetData::PlanetData(PlanetSurface * surface) {
 }
 
 bool PlanetData::dipatchTask(TaskType type, Tile * target) {
-	for (Person &p * this->people) {
+	for (Person &p : this->people) {
 		if (p.job == nullptr && p.task == nullptr) {
 			p.task = new Task(type, target);
 			return true;
@@ -16,9 +18,16 @@ bool PlanetData::dipatchTask(TaskType type, Tile * target) {
 	return false;
 }
 
-std::vector<TileType> PlanetData::getPossibleTasks(Tile * target) {
-	std::vector<TileType> v;
-	switch (target->type) {
-		case TileType::TREE: v.push_back(TaskType::GATHER_MATERIALS);
+std::vector<TaskType> PlanetData::getPossibleTasks(Tile * target) {
+	std::vector<TaskType> v;
+	if (isTree(target->type)) {
+		v.push_back(TaskType::FELL_TREE);
 	}
+	if (isMineral(target->type)) {
+		v.push_back(TaskType::GATHER_MINERALS);
+	}
+	if (isClearable(target->type)) {
+		v.push_back(TaskType::CLEAR);
+	}
+	return v;
 }

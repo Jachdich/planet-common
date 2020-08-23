@@ -3,11 +3,11 @@ HEADERS := $(shell find include -type f -name *.h)
 OBJECTS := $(patsubst src/%,obj/%,$(SOURCES:.cpp=.o))
 
 common.a: $(OBJECTS)
-	ar ru common.a $<
+	ar ru common.a $(OBJECTS)
 	ranlib common.a
 
 obj/%.o: src/%.cpp $(HEADERS)
-	g++ -c -o $@ $< -Wall -g -std=c++11 -Iinclude
+	g++ -c -o $@ $< -Wall -g -std=c++17 -Iinclude
 
 obj/FastNoise.o: src/FastNoise.cpp
 	g++ -c -o $@ $< -Wall -g -O3 -std=c++11 -Iinclude
@@ -20,6 +20,7 @@ install: common.a
 	rm -r ../planet-server/include/common
 	cp -r include ../planet-client/include/common
 	cp -r include ../planet-server/include/common
+
 clean:
 	rm obj/*.o
 	rm common.a

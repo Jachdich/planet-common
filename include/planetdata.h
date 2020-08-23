@@ -37,6 +37,9 @@ public:
 	PlanetSurface * surface;
 	PlanetData();
 	PlanetData(PlanetSurface * surface);
+	std::vector<TaskType> getPossibleTasks(Tile * target);
+	bool dipatchTask(TaskType type, Tile * target);
+
 };
 
 #endif
