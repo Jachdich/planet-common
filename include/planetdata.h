@@ -38,7 +38,8 @@ public:
 	PlanetData();
 	PlanetData(PlanetSurface * surface);
 	std::vector<TaskType> getPossibleTasks(Tile * target);
-	bool dipatchTask(TaskType type, Tile * target);
+	bool dispatchTask(TaskType type, Tile * target);
+	void tick();
 
 };
 

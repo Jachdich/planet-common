@@ -8,7 +8,11 @@ PlanetData::PlanetData(PlanetSurface * surface) {
 	this->surface = surface;
 }
 
-bool PlanetData::dipatchTask(TaskType type, Tile * target) {
+void PlanetData::tick() {
+	
+}
+
+bool PlanetData::dispatchTask(TaskType type, Tile * target) {
 	for (Person &p : this->people) {
 		if (p.job == nullptr && p.task == nullptr) {
 			p.task = new Task(type, target);
