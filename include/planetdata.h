@@ -7,7 +7,7 @@ class PlanetSurface;
 struct Tile;
 
 struct Task {
-	Tile * target = (Tile *)0xABABABAB; //DEBUG: remove this
+	Tile * target;
 	TaskType type;
 	int durationLeft;
 	inline Task(TaskType type, Tile * target) {

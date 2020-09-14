@@ -18,6 +18,7 @@ enum class TileType {
 	WATER,
 	ROCK,
 	HOUSE,
+	PINEFOREST,
 };
 
 inline bool isTree(TileType type) {
@@ -31,6 +32,7 @@ inline bool isTree(TileType type) {
 		return false;
 		case TileType::TREE:
 		case TileType::PINE:
+		case TileType::PINEFOREST:
 		return true;
 	}
 }
@@ -44,6 +46,7 @@ inline bool isMineral(TileType type) {
 		case TileType::TREE:
 		case TileType::HOUSE:
 		case TileType::PINE:
+		case TileType::PINEFOREST:
 		return false;
 		case TileType::ROCK:
 		return true;
@@ -59,6 +62,7 @@ inline bool isClearable(TileType type) {
 		case TileType::TREE:
 		case TileType::HOUSE:
 		case TileType::PINE:
+		case TileType::PINEFOREST:
 		return false;
 		case TileType::BUSH:
 		return true;
