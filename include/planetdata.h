@@ -7,13 +7,13 @@ class PlanetSurface;
 struct Tile;
 
 struct Task {
-	Tile * pos;
+	Tile * target = (Tile *)0xABABABAB; //DEBUG: remove this
 	TaskType type;
 	int durationLeft;
-	inline Task(TaskType type,Tile * pos) {
+	inline Task(TaskType type, Tile * target) {
 		this->type = type;
-		this->pos = pos;
-		durationLeft = 0;
+		this->target = target;
+		durationLeft = 60;
 	}
 };
 
@@ -25,6 +25,7 @@ struct Person {
 	Task * task = nullptr;
 	Job  * job  = nullptr;
 	int age;
+	void tick();
 };
 
 class PlanetData {
