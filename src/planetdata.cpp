@@ -1,6 +1,7 @@
 #include "planetdata.h"
 #include "enums.h"
 #include "tile.h"
+#include <chrono>
 
 class PlanetSurface;
 PlanetData::PlanetData() {}
@@ -27,6 +28,13 @@ void Person::tick() {
 void PlanetData::tick() {
 	for (Person &p : this->people) {
 		p.tick();
+	}
+}
+
+void PlanetData::runLogic() {
+	while (true) {
+		tick();
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000/20));
 	}
 }
 

@@ -41,6 +41,7 @@ public:
 	std::vector<TaskType> getPossibleTasks(Tile * target);
 	bool dispatchTask(TaskType type, Tile * target);
 	void tick();
+	void runLogic();
 
 };
 
