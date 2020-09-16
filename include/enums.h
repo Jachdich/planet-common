@@ -23,49 +23,29 @@ enum class TileType {
 
 inline bool isTree(TileType type) {
 	switch (type) {
-		case TileType::VOID:
-		case TileType::GRASS:
-	 	case TileType::BUSH:
-		case TileType::WATER:
-		case TileType::ROCK:
-		case TileType::HOUSE:
-		return false;
 		case TileType::TREE:
 		case TileType::PINE:
 		case TileType::PINEFOREST:
 		return true;
+		default: return false;
 	}
 }
 
 inline bool isMineral(TileType type) {
 	switch (type) {
-		case TileType::VOID:
-		case TileType::GRASS:
-		case TileType::BUSH:
-		case TileType::WATER:
-		case TileType::TREE:
-		case TileType::HOUSE:
-		case TileType::PINE:
-		case TileType::PINEFOREST:
-		return false;
 		case TileType::ROCK:
 		return true;
+		default:
+		return false;
 	}
 }
 
 inline bool isClearable(TileType type) {
 	switch (type) {
-		case TileType::VOID:
-		case TileType::GRASS:
-		case TileType::ROCK:
-		case TileType::WATER:
-		case TileType::TREE:
-		case TileType::HOUSE:
-		case TileType::PINE:
-		case TileType::PINEFOREST:
-		return false;
 		case TileType::BUSH:
 		return true;
+		default:
+		return false;
 	}
 }
 

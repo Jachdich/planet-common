@@ -7,7 +7,7 @@ common.a: $(OBJECTS)
 	ranlib common.a
 
 obj/%.o: src/%.cpp $(HEADERS)
-	g++ -c -o $@ $< -Wall -g -std=c++17 -Iinclude
+	g++ -c -o $@ $< -Wall -Werror -g -std=c++17 -Iinclude
 
 obj/FastNoise.o: src/FastNoise.cpp
 	g++ -c -o $@ $< -Wall -g -O3 -std=c++11 -Iinclude
