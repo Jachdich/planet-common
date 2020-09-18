@@ -58,6 +58,8 @@ void PlanetData::draw(olc::PixelGameEngine * e, CamParams trx) {
 			e->DrawStringDecal(pos + offset, txt, olc::WHITE, {trx.zoom * 3, trx.zoom * 3});
 		}
 	}
+
+	this->lastTimeStamp = ms;
 }
 
 void PlanetData::runLogic() {
