@@ -1,6 +1,7 @@
 #ifndef __PLANETDATA_H
 #define __PLANETDATA_H
 #include <vector>
+#include <jsoncpp/json/json.h>
 #include "olcPixelGameEngine.h"
 #include "helperfunctions.h"
 #include "enums.h"
@@ -12,41 +13,37 @@ struct Task {
 	Tile * target;
 	TaskType type;
 	double durationLeft;
-	inline Task(TaskType type, Tile * target) {
-		this->type = type;
-		this->target = target;
-		switch (type) {
-			case TaskType::FELL_TREE:
-				durationLeft = 60.0;
-				break;
-			case TaskType::CLEAR:
-				durationLeft = 3.0;
-				break;
-			case TaskType::GATHER_MINERALS:
-				durationLeft = 10.0;
-				break;
-		}
-	}
+	bool isNone = true;
+	Task();
+	Task(Json::Value json, PlanetSurface * surf);
+	Task(TaskType type, Tile * target);
+	Json::Value toJSON();
+	void fromJSON(Json::Value json, PlanetSurface * surf);
 };
 
 struct Job {
 	Tile * pos;
+	bool isNone = true;
+	Job();
+	Job(Json::Value json, PlanetSurface * surface);
+	Json::Value toJSON();
+	void fromJSON(Json::Value json, PlanetSurface * surf);
 };
 
 struct Person {
-	Task * task = nullptr;
-	Job  * job  = nullptr;
+	Task task;
+	Job job;
 	int age;
 	void tick(long elapsedTime);
+	Person();
+	Person(Json::Value json, PlanetSurface * surface);
+	Json::Value toJSON();
+	void fromJSON(Json::Value json, PlanetSurface * surface);
 };
 
 class PlanetData {
 public:
 	std::vector<Person> people;
-	std::vector<Task>   toDoTasks;
-	std::vector<Task>   doingTasks;
-	std::vector<Job>    unassignedJobs;
-	std::vector<Job>    assignedJobs;
 	PlanetSurface * surface;
 	bool threadStopped = false;
 	long lastTimeStamp;
@@ -58,7 +55,8 @@ public:
 	void tick();
 	void runLogic();
 	void stopThread();
-
+	Json::Value toJSON();
+	void fromJSON(Json::Value json, PlanetSurface * surface);
 };
 
 #endif

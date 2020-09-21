@@ -2,6 +2,7 @@
 #include "enums.h"
 #include "tile.h"
 #include "olcPixelGameEngine.h"
+#include "planetsurface.h"
 #include <chrono>
 #include <string>
 
@@ -34,7 +35,7 @@ void Person::tick(long elapsedMs) {
 }
 
 void PlanetData::tick() {
-	long ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+	long ms = std::chrono::duration_cast<std::chrono::milliseconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
 
 	long elapsedTime = ms - this->lastTimeStamp;
@@ -42,7 +43,7 @@ void PlanetData::tick() {
 		p.tick(elapsedTime);
 	}
 
-	this->lastTimeStamp = ms;
+	this->lastTimeStamp = ms; //todo take into account the time taken for tick8
 }
 
 std::string pad(std::string str, int n = 2, char chr = '0') {
@@ -58,8 +59,6 @@ void PlanetData::draw(olc::PixelGameEngine * e, CamParams trx) {
 			e->DrawStringDecal(pos + offset, txt, olc::WHITE, {trx.zoom * 3, trx.zoom * 3});
 		}
 	}
-
-	this->lastTimeStamp = ms;
 }
 
 void PlanetData::runLogic() {
@@ -104,4 +103,103 @@ std::vector<TaskType> PlanetData::getPossibleTasks(Tile * target) {
 	//	v.push_back(TaskType::)
 	//}
 	return v;
+}
+
+Job::Job() {
+}
+
+Job::Job(Json::Value json, PlanetSurface * surface) {
+	fromJSON(json, surface);
+}
+
+Task::Task() {
+	isNone = true;
+}
+
+Task::Task(Json::Value json, PlanetSurface * surf) {
+	fromJSON(json, surf);
+}
+
+Task::Task(TaskType type, Tile * target) {
+	this->type = type;
+	this->target = target;
+	switch (type) {
+		case TaskType::FELL_TREE:
+			durationLeft = 60.0;
+			break;
+		case TaskType::CLEAR:
+			durationLeft = 3.0;
+			break;
+		case TaskType::GATHER_MINERALS:
+			durationLeft = 10.0;
+			break;
+	}
+	isNone = false;
+}
+
+Json::Value Task::toJSON() {
+	Json::Value res;
+	res["type"] = (int)type;
+	res["isNone"] = isNone;
+	res["durationLeft"] = durationleft;
+	res["targetX"] = target->x;
+	res["targetY"] = target->y;
+	return res;
+}
+
+void Task::fromJSON(Json::Value json, PlanetSurface * surf) {
+	type = (TaskType)res["type"].asInt();
+	isNone = res["isNone"].asBool();
+	durationLeft = res["durationLeft"].asDouble();
+	int x = res["targetX"].asInt(),
+		y = res["targetY"].asInt();
+	target = &surf->tiles[y * surf->rad + x];
+}
+
+Person::Person(Json::Value json, PlanetSurface * surface) {
+	fromJSON(json, surface);
+}
+
+Json::Value Job::toJSON() {
+	Json::Value res;
+	res["isNone"] = isNone;
+	res["targetX"] = pos->x;
+	res["targetY"] = pos->y;
+	return res;
+}
+
+void Job::fromJSON(Json::Value json, PlanetSurface * surf) {
+	isNone = res["isNone"].asBool();
+	int x = res["targetX"].asInt(),
+		y = res["targetY"].asInt();
+	pos = &surf->tiles[y * surf->rad + x];
+}
+
+Json::Value Person::toJSON() {
+	Json::Value res;
+	res["age"] = age;
+	res["task"] = task.toJSON();
+	res["job"] = job.toJSON();
+	return res;
+}
+
+void Person::fromJSON(Json::Value json, PlanetSurface * surface) {
+	age = json["age"].asInt();
+	task = Task(json["task"], surface);
+	job = Job(json["job"], surface);
+}
+
+Json::Value PlanetData::toJSON() {
+	Json::Value res;
+	for (Person &p : people) {
+		res["people"].append(p.toJSON());
+	}
+	return res;
+}
+
+void PlanetData::fromJSON(Json::Value json, PlanetSurface * surface) {
+	for (Json::Value val : json["people"]) {
+		people.push_back(Person(val, surface));
+	}
+	this->surface = surface;
 }
