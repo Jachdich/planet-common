@@ -10,19 +10,24 @@ class PlanetSurface;
 PlanetData::PlanetData() {}
 PlanetData::PlanetData(PlanetSurface * surface) {
 	this->surface = surface;
-	this->people.push_back(Person());
+	for (int i = 0; i < 4; i++) {
+		this->people.push_back(Person());
+	}
+}
+
+Person::Person() {
+	
 }
 
 void Person::tick(long elapsedMs) {
 	double elapsedS = elapsedMs / 1000.0;
-	if (this->task != nullptr) {
-		switch (this->task->type) {
+	if (!this->task.isNone) {
+		switch (this->task.type) {
 			case TaskType::FELL_TREE:
-				this->task->durationLeft -= elapsedS;
-				if (this->task->durationLeft <= 0) {
-					this->task->target->type = TileType::GRASS;
-					delete this->task;
-					this->task = nullptr;
+				this->task.durationLeft -= elapsedS;
+				if (this->task.durationLeft <= 0) {
+					this->task.target->type = TileType::GRASS;
+					this->task = Task(); //task(NONE);
 				}
 				break;
 
@@ -52,10 +57,10 @@ std::string pad(std::string str, int n = 2, char chr = '0') {
 
 void PlanetData::draw(olc::PixelGameEngine * e, CamParams trx) {
 	for (Person &p : this->people) {
-		if (p.task != nullptr) {
-			olc::vf2d pos = p.task->target->getTextureCoordinates(trx);
+		if (!p.task.isNone) {
+			olc::vf2d pos = p.task.target->getTextureCoordinates(trx);
 			olc::vf2d offset = {32 * trx.zoom, 64 * trx.zoom}; //TODO fractions of texture size not hardcoded values
-			std::string txt = std::to_string((int)(p.task->durationLeft / 60)) + ":" + pad(std::to_string((int)(p.task->durationLeft) % 60));
+			std::string txt = std::to_string((int)(p.task.durationLeft / 60)) + ":" + pad(std::to_string((int)(p.task.durationLeft) % 60));
 			e->DrawStringDecal(pos + offset, txt, olc::WHITE, {trx.zoom * 3, trx.zoom * 3});
 		}
 	}
@@ -80,8 +85,8 @@ void PlanetData::stopThread() {
 
 bool PlanetData::dispatchTask(TaskType type, Tile * target) {
 	for (Person &p : this->people) {
-		if (p.job == nullptr && p.task == nullptr) {
-			p.task = new Task(type, target);
+		if (p.job.isNone && p.task.isNone) {
+			p.task = Task(type, target);
 			return true;
 		}
 	}
@@ -141,13 +146,13 @@ Json::Value Task::toJSON() {
 	Json::Value res;
 	res["type"] = (int)type;
 	res["isNone"] = isNone;
-	res["durationLeft"] = durationleft;
+	res["durationLeft"] = durationLeft;
 	res["targetX"] = target->x;
 	res["targetY"] = target->y;
 	return res;
 }
 
-void Task::fromJSON(Json::Value json, PlanetSurface * surf) {
+void Task::fromJSON(Json::Value res, PlanetSurface * surf) {
 	type = (TaskType)res["type"].asInt();
 	isNone = res["isNone"].asBool();
 	durationLeft = res["durationLeft"].asDouble();
@@ -169,9 +174,9 @@ Json::Value Job::toJSON() {
 }
 
 void Job::fromJSON(Json::Value json, PlanetSurface * surf) {
-	isNone = res["isNone"].asBool();
-	int x = res["targetX"].asInt(),
-		y = res["targetY"].asInt();
+	isNone = json["isNone"].asBool();
+	int x = json["targetX"].asInt(),
+		y = json["targetY"].asInt();
 	pos = &surf->tiles[y * surf->rad + x];
 }
 
