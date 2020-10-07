@@ -6,7 +6,10 @@ common.a: $(OBJECTS)
 	ar ru common.a $(OBJECTS)
 	ranlib common.a
 
-obj/%.o: src/%.cpp $(HEADERS)
+#obj:
+#	mkdir -p obj
+
+obj/%.o: src/%.cpp $(HEADERS)# obj
 	g++ -c -o $@ $< -Wall -Werror -g -std=c++17 -Iinclude
 
 obj/FastNoise.o: src/FastNoise.cpp
@@ -16,8 +19,8 @@ install: common.a
 	cp common.a ../planet-client
 	cp common.a ../planet-server
 
-	rm -r ../planet-client/include/common
-	rm -r ../planet-server/include/common
+	rm -rf ../planet-client/include/common
+	rm -rf ../planet-server/include/common
 	cp -r include ../planet-client/include/common
 	cp -r include ../planet-server/include/common
 
