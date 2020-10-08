@@ -59,8 +59,8 @@ inline bool isClearable(TileType type) {
 
 inline int getTimeForTask(TaskType t) {
 	switch (t) {
-		case TaskType::FELL_TREE: return 60;
-		case TaskType::GATHER_MINERALS: return 120;
+		case TaskType::FELL_TREE: return 6;
+		case TaskType::GATHER_MINERALS: return 12;
 		case TaskType::CLEAR: return 3;
 		case TaskType::PLANT_TREE: return 5;
 	}
