@@ -8,13 +8,15 @@ enum class ErrorCode {
 	INVALID_REQUEST = -2,
 	OUT_OF_BOUNDS = -3,
 	NO_PEOPLE_AVAILABLE = -4
+    INSUFFICIENT_RESOURCES = -5;
 };
 
 enum class TaskType {
 	FELL_TREE,
 	GATHER_MINERALS,
 	CLEAR,
-	PLANT_TREE
+	PLANT_TREE,
+	BUILD_HOUSE,
 };
 
 enum class TileType {
