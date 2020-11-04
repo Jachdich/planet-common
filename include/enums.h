@@ -7,8 +7,8 @@ enum class ErrorCode {
 	MALFORMED_JSON = -1,
 	INVALID_REQUEST = -2,
 	OUT_OF_BOUNDS = -3,
-	NO_PEOPLE_AVAILABLE = -4
-    INSUFFICIENT_RESOURCES = -5;
+	NO_PEOPLE_AVAILABLE = -4,
+    INSUFFICIENT_RESOURCES = -5,
 };
 
 enum class TaskType {
@@ -28,7 +28,8 @@ enum class TileType {
 	WATER,
 	ROCK,
 	HOUSE,
-	PINEFOREST
+	PINEFOREST,
+	FOREST,
 };
 
 inline bool isTree(TileType type) {
@@ -36,6 +37,7 @@ inline bool isTree(TileType type) {
 		case TileType::TREE:
 		case TileType::PINE:
 		case TileType::PINEFOREST:
+		case TileType::FOREST:
 		return true;
 		default: return false;
 	}
@@ -65,6 +67,7 @@ inline int getTimeForTask(TaskType t) {
 		case TaskType::GATHER_MINERALS: return 12;
 		case TaskType::CLEAR: return 3;
 		case TaskType::PLANT_TREE: return 5;
+		case TaskType::BUILD_HOUSE: return 120;
 	}
 	return -1;
 }
@@ -75,6 +78,7 @@ inline std::string getTaskTypeName(TaskType t) {
 		case TaskType::GATHER_MINERALS: return "Mine minerals";
 		case TaskType::CLEAR: return "Clear everything";
 		case TaskType::PLANT_TREE: return "Plant a tree";
+		case TaskType::BUILD_HOUSE: return "Build house";
 	}
 	return "INVALID VALUE";
 }
