@@ -30,6 +30,13 @@ enum class TileType {
 	HOUSE,
 	PINEFOREST,
 	FOREST,
+//	ROAD_NS,
+//	ROAD_EW,
+//	ROAD_NE,
+//	ROAD_NW,
+//	ROAD_SE,
+//	ROAD_SW,
+//    ROAD_NESW,
 };
 
 inline bool isTree(TileType type) {
