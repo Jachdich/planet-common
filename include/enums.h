@@ -9,6 +9,8 @@ enum class ErrorCode {
 	OUT_OF_BOUNDS = -3,
 	NO_PEOPLE_AVAILABLE = -4,
     INSUFFICIENT_RESOURCES = -5,
+    TASK_ALREADY_STARTED = -6,
+    TASK_ON_WRONG_TILE = -7,
 };
 
 enum class TaskType {
