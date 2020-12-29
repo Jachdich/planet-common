@@ -33,7 +33,7 @@ inline void getJsonFromSurfaceLocator(SurfaceLocator loc, Json::Value& root) {
 #ifdef __SERVER_H
 #include "network.h"
 
-PlanetSurface * getSurfaceFromLocator(SurfaceLocator loc) {
+inline PlanetSurface * getSurfaceFromLocator(SurfaceLocator loc) {
     Sector * sec = map.getSectorAt(loc.sectorX, loc.sectorY);
 	if (loc.starPos < sec->numStars) {
 		Star * s = &sec->stars[loc.starPos];
@@ -49,7 +49,7 @@ PlanetSurface * getSurfaceFromLocator(SurfaceLocator loc) {
 	}
 }
 
-PlanetSurface * getSurfaceFromJson(Json::Value root) {
+inline PlanetSurface * getSurfaceFromJson(Json::Value root) {
 	SurfaceLocator loc = getSurfaceLocatorFromJson(root);
 	return getSurfaceFromLocator(loc);
 }
