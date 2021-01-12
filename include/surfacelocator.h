@@ -11,6 +11,13 @@ struct SurfaceLocator {
 	char starPos;
 	int sectorX;
 	int sectorY;
+
+    bool operator==(const SurfaceLocator& other) {
+        return sectorX == other.sectorX &&
+               sectorY == other.sectorY &&
+               starPos == other.starPos &&
+               planetPos == other.planetPos;
+    }
 };
 
 inline SurfaceLocator getSurfaceLocatorFromJson(Json::Value root) {
