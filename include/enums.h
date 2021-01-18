@@ -32,6 +32,7 @@ enum class TileType {
 	HOUSE,
 	PINEFOREST,
 	FOREST,
+	TONK,
 //	ROAD_NS,
 //	ROAD_EW,
 //	ROAD_NE,
