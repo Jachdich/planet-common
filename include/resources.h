@@ -94,11 +94,17 @@ inline Resources getResourcesFromJson(Json::Value root) {
 
 inline Json::Value getJsonFromResources(Resources stats) {
     Json::Value root;
-    	for (const auto& [key, value]: stats.data) {
+    for (const auto& [key, value]: stats.data) {
         root[key] = value;
     }
     
     return root;
+}
+
+inline void getJsonFromResources(Resources stats, Json::Value& root) {
+    for (const auto& [key, value]: stats.data) {
+        root[key] = value;
+    }
 }
 
 #endif
