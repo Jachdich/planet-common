@@ -29,7 +29,9 @@ struct Resources {
 	inline Resources() {}
 
 	inline Resources(std::unordered_map<std::string, double> binds) {
-	    data.insert(binds.begin(), binds.end());
+	    for (auto &[k, v]: binds) {
+	        data[k] = v;
+	    }
 	}
 	
     inline std::string toString() {
@@ -48,10 +50,10 @@ struct Resources {
 	    return result;
 	}
 
-    inline bool operator>(Resources& other) const {
-	    bool result;
+    inline bool operator>=(Resources& other) const {
+	    bool result = true;
     	for (const auto& [key, value]: data) {
-	        result = result && (value > other.data[key]);
+	        result = result && (value >= other.data[key]); //TODO use epsilon?
 	    }
 	    return result;
 	}

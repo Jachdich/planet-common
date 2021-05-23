@@ -88,7 +88,7 @@ inline std::string getTaskTypeName(TaskType t) {
 		case TaskType::PLANT_TREE: return "Plant a tree";
 		case TaskType::BUILD_HOUSE: return "Build house";
 		case TaskType::BUILD_FARM: return "Build farm";
-
+		case TaskType::BUILD_GREENHOUSE: return "Build greenhouse";
 		case TaskType::BUILD_WATERPUMP: return "Build water pump";
 		default: return "INVALID VALUE";
 	}
