@@ -4,40 +4,56 @@
 #include <string>
 #include <unordered_map>
 
+struct ResourceValue {
+    double value;
+    double capacity;
+    inline bool operator==(const ResourceValue &other) {
+        return this->value == other.value && this->capacity == other.capacity;
+    }
+};
+
+#define DEFAULT_CAPACITY 500
+
 struct Resources {
-	std::unordered_map<std::string, double> data = {
-	    {"wood", 0},
-	    {"stone", 0},
-	    {"food", 0},
-	    {"water", 0},
- 	    {"people", 0},
- 	    {"peopleIdle", 0},
- 	    {"peopleSlots", 0},
- 	    {"ironOre", 0},
- 	    {"copperOre", 0},
- 	    {"aluminiumOre", 0},
- 	    {"iron", 0},
- 	    {"copper", 0},
- 	    {"aluminium", 0},
- 	    {"silicon", 0},
- 	    {"oil", 0},
- 	    {"plastic", 0},
- 	    {"glass", 0},
- 	    {"sand", 0},
+	std::unordered_map<std::string, ResourceValue> data = {
+	    {"wood",        {0, DEFAULT_CAPACITY}},
+	    {"stone",       {0, DEFAULT_CAPACITY}},
+	    {"food",        {0, DEFAULT_CAPACITY}},
+	    {"water",       {0, DEFAULT_CAPACITY}},
+ 	    {"people",      {0, DEFAULT_CAPACITY}},
+ 	    {"peopleIdle",  {0, DEFAULT_CAPACITY}},
+ 	    {"peopleSlots", {0, DEFAULT_CAPACITY}},
+ 	    {"ironOre",     {0, DEFAULT_CAPACITY}},
+ 	    {"copperOre",   {0, DEFAULT_CAPACITY}},
+ 	    {"aluminiumOre",{0, DEFAULT_CAPACITY}},
+ 	    {"iron",        {0, DEFAULT_CAPACITY}},
+ 	    {"copper",      {0, DEFAULT_CAPACITY}},
+ 	    {"aluminium",   {0, DEFAULT_CAPACITY}},
+ 	    {"silicon",     {0, DEFAULT_CAPACITY}},
+ 	    {"oil",         {0, DEFAULT_CAPACITY}},
+ 	    {"plastic",     {0, DEFAULT_CAPACITY}},
+ 	    {"glass",       {0, DEFAULT_CAPACITY}},
+ 	    {"sand",        {0, DEFAULT_CAPACITY}},
 	};
 
 	inline Resources() {}
 
 	inline Resources(std::unordered_map<std::string, double> binds) {
 	    for (auto &[k, v]: binds) {
-	        data[k] = v;
+	        data[k].value = v;
 	    }
 	}
+
+	inline Resources(std::unordered_map<std::string, ResourceValue> binds) {
+        for (auto &[k, v]: binds) {
+          data[k] = v;
+        }
+    }
 	
     inline std::string toString() {
         std::string res;
     	for (const auto& [key, value]: data) {
-            res += key + ": " + std::to_string(value) + ", ";
+            res += key + ": " + std::to_string(value.value) + "/" + std::to_string(value.capacity) + ", ";
         }
         return res;
 	}
@@ -53,7 +69,7 @@ struct Resources {
     inline bool operator>=(Resources& other) const {
 	    bool result = true;
     	for (const auto& [key, value]: data) {
-	        result = result && (value >= other.data[key]); //TODO use epsilon?
+	        result = result && (value.value >= other.data[key].value); //TODO use epsilon?
 	    }
 	    return result;
 	}
@@ -75,12 +91,16 @@ struct Resources {
 	}
 
 	inline double& operator[](const std::string &key) {
-	    return data[key];
+	    return data[key].value;
+	}
+
+	inline double& getCapacity(const std::string &key) {
+        return data[key].capacity;
 	}
 
 	inline Resources clone() {
 	    Resources r;
-	    r.data = std::unordered_map<std::string, double>(this->data);
+	    r.data = std::unordered_map<std::string, ResourceValue>(this->data);
 	    return r;
 	}
 };
