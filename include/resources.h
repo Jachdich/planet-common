@@ -39,37 +39,37 @@ struct Resources {
 	inline Resources() {}
 
 	inline Resources(std::unordered_map<std::string, double> binds) {
-	    for (auto &[k, v]: binds) {
-	        data[k].value = v;
-	    }
+	    for (auto entry: binds) {
+           data[entry.first].value = entry.second;
+         }
 	}
 
 	inline Resources(std::unordered_map<std::string, ResourceValue> binds) {
-        for (auto &[k, v]: binds) {
-          data[k] = v;
+        for (auto entry: binds) {
+          data[entry.first] = entry.second;
         }
     }
 	
     inline std::string toString() {
         std::string res;
-    	for (const auto& [key, value]: data) {
-            res += key + ": " + std::to_string(value.value) + "/" + std::to_string(value.capacity) + ", ";
+    	for (const auto& entry: data) {
+            res += entry.first + ": " + std::to_string(entry.second.value) + "/" + std::to_string(entry.second.capacity) + ", ";
         }
         return res;
 	}
 
 	inline bool operator==(Resources& other) const {
 	    bool result;
-    	for (auto& [key, value]: data) {
-	        result = result && (value.value == other.data[key].value);
+    	for (auto& entry: data) {
+	        result = result && (entry.second.value == other.data[entry.first].value);
 	    }
 	    return result;
 	}
 
     inline bool operator>=(Resources& other) const {
 	    bool result = true;
-    	for (auto& [key, value]: data) {
-	        result = result && (value.value >= other.data[key].value); //TODO use epsilon?
+    	for (auto& entry: data) {
+	        result = result && (entry.second.value >= other.data[entry.first].value); //TODO use epsilon?
 	    }
 	    return result;
 	}
@@ -79,14 +79,14 @@ struct Resources {
 	}
 
 	inline void operator+=(Resources& other) {
-    	for (const auto& [key, value]: data) {
-	        this->data[key].value += other.data[key].value;
+    	for (const auto& entry: data) {
+	        this->data[entry.first].value += other.data[entry.first].value;
 	    }   
 	}
 	
 	inline void operator-=(Resources& other) {
-    	for (const auto& [key, value]: data) {
-	        this->data[key].value -= other.data[key].value;
+    	for (const auto& entry: data) {
+	        this->data[entry.first].value -= other.data[entry.first].value;
 	    }
 	}
 
@@ -108,27 +108,27 @@ struct Resources {
 
 inline Resources getResourcesFromJson(Json::Value root) {
     Resources n;
-    for (const auto& [key, value]: n.data) {
-	    n.data[key].value = root[key]["value"].asDouble();
-	    n.data[key].capacity = root[key]["capacity"].asDouble();
+    for (const auto& entry: n.data) {
+	    n.data[entry.first].value = root[entry.first]["value"].asDouble();
+	    n.data[entry.first].capacity = root[entry.first]["capacity"].asDouble();
 	}
     return n;
 }
 
 inline Json::Value getJsonFromResources(Resources stats) {
     Json::Value root;
-    for (const auto& [key, value]: stats.data) {
-        root[key]["value"] = value.value;
-        root[key]["capacity"] = value.capacity;
+    for (const auto& entry: stats.data) {
+        root[entry.first]["value"] = entry.second.value;
+        root[entry.first]["capacity"] = entry.second.capacity;
     }
     
     return root;
 }
 
 inline void getJsonFromResources(Resources stats, Json::Value& root) {
-    for (const auto& [key, value]: stats.data) {
-        root[key]["value"] = value.value;
-        root[key]["capacity"] = value.capacity;
+    for (const auto& entry: stats.data) {
+        root[entry.first]["value"] = entry.second.value;
+        root[entry.first]["capacity"] = entry.second.capacity;
     }
 }
 
