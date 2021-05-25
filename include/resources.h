@@ -60,15 +60,15 @@ struct Resources {
 
 	inline bool operator==(Resources& other) const {
 	    bool result;
-    	for (const auto& [key, value]: data) {
-	        result = result && (value == other.data[key]);
+    	for (auto& [key, value]: data) {
+	        result = result && (value.value == other.data[key].value);
 	    }
 	    return result;
 	}
 
     inline bool operator>=(Resources& other) const {
 	    bool result = true;
-    	for (const auto& [key, value]: data) {
+    	for (auto& [key, value]: data) {
 	        result = result && (value.value >= other.data[key].value); //TODO use epsilon?
 	    }
 	    return result;
@@ -80,13 +80,13 @@ struct Resources {
 
 	inline void operator+=(Resources& other) {
     	for (const auto& [key, value]: data) {
-	        this->data[key] += other.data[key];
+	        this->data[key].value += other.data[key].value;
 	    }   
 	}
 	
 	inline void operator-=(Resources& other) {
     	for (const auto& [key, value]: data) {
-	        this->data[key] -= other.data[key];
+	        this->data[key].value -= other.data[key].value;
 	    }
 	}
 
@@ -109,7 +109,8 @@ struct Resources {
 inline Resources getResourcesFromJson(Json::Value root) {
     Resources n;
     for (const auto& [key, value]: n.data) {
-	    n.data[key] = root[key].asDouble();
+	    n.data[key].value = root[key]["value"].asDouble();
+	    n.data[key].capacity = root[key]["capacity"].asDouble();
 	}
     return n;
 }
@@ -117,7 +118,8 @@ inline Resources getResourcesFromJson(Json::Value root) {
 inline Json::Value getJsonFromResources(Resources stats) {
     Json::Value root;
     for (const auto& [key, value]: stats.data) {
-        root[key] = value;
+        root[key]["value"] = value.value;
+        root[key]["capacity"] = value.capacity;
     }
     
     return root;
@@ -125,7 +127,8 @@ inline Json::Value getJsonFromResources(Resources stats) {
 
 inline void getJsonFromResources(Resources stats, Json::Value& root) {
     for (const auto& [key, value]: stats.data) {
-        root[key] = value;
+        root[key]["value"] = value.value;
+        root[key]["capacity"] = value.capacity;
     }
 }
 

@@ -31,7 +31,7 @@ enum class TaskType {
 };
 
 enum class TileType {
-	VOID,
+	AIR,
 	GRASS,
 	BUSH,
 	TREE,
