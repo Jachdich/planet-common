@@ -42,7 +42,6 @@ enum class TileType {
 	PINEFOREST,
 	FOREST,
 	TONK,
-
 	FARM,
 	GREENHOUSE,
 	WATERPUMP,
@@ -50,6 +49,38 @@ enum class TileType {
 	BLASTFURNACE,
 	WAREHOUSE,
 };
+
+struct TileMinerals {
+    double sand;
+    double copper;
+    double iron;
+    double aluminium;
+};
+
+inline TileMinerals getTileMinerals(uint32_t colour) {
+    uint8_t r = (colour >> 16) & 0xFF;
+    uint8_t g = (colour >>  8) & 0xFF;
+    uint8_t b = (colour >>  0) & 0xFF;
+    
+    double iron = r / 200.0 - g / 512.0 - b / 512.0;
+    if (iron < 0) iron = 0;
+    if (iron > 1) iron = 1;
+
+    double copper = (1 - abs(g - 192) / 256.0) - abs(r - 64) / 256.0 - abs(b - 96) / 512.0;
+    if (r > g) copper -= r / 128.0;
+    if (copper < 0) copper = 0;
+    if (copper > 1) copper = 1;
+
+    double sand = (1 - abs(r - g) / 128) - abs(b - 96) / 256.0 - (512 - (r + g)) / 256.0;
+    if (sand < 0) sand = 0;
+    if (sand > 1) sand = 1;
+
+    double aluminium = b / 200.0 - r / 512.0 - g / 512.0;
+    if (aluminium < 0) aluminium = 0;
+    if (aluminium > 1) aluminium = 1;
+    
+    return {sand, copper, iron, aluminium};
+}
 
 inline bool isTree(TileType type) {
 	switch (type) {
@@ -78,6 +109,29 @@ inline bool isClearable(TileType type) {
 		default:
 		return false;
 	}
+}
+
+inline std::string getTileTypeName(TileType t) {
+    switch (t) {
+        case TileType::AIR : return "AIR";
+        case TileType::GRASS : return "GRASS";
+        case TileType::BUSH : return "BUSH";
+        case TileType::TREE : return "TREE";
+        case TileType::PINE : return "PINE";
+        case TileType::WATER : return "WATER";
+        case TileType::ROCK : return "ROCK";
+        case TileType::HOUSE : return "HOUSE";
+        case TileType::PINEFOREST : return "PINEFOREST";
+        case TileType::FOREST : return "FOREST";
+        case TileType::TONK : return "TONK";
+        case TileType::FARM : return "FARM";
+        case TileType::GREENHOUSE : return "GREENHOUSE";
+        case TileType::WATERPUMP : return "WATERPUMP";
+        case TileType::MINE : return "MINE";
+        case TileType::BLASTFURNACE : return "BLASTFURNACE";
+        case TileType::WAREHOUSE : return "WAREHOUSE";
+        default: return "INVALID_NAME";
+    }
 }
 
 inline std::string getTaskTypeName(TaskType t) {
