@@ -28,6 +28,7 @@ enum class TaskType {
 	BUILD_BLASTFURNACE,
 	BUILD_WAREHOUSE,
 	BUILD_ROAD,
+	BUILD_FORESTRY,
 };
 
 enum class TileType {
@@ -48,6 +49,7 @@ enum class TileType {
 	MINE,
 	BLASTFURNACE,
 	WAREHOUSE,
+	FORESTRY,
 };
 
 struct TileMinerals {
@@ -130,6 +132,7 @@ inline std::string getTileTypeName(TileType t) {
         case TileType::MINE : return "MINE";
         case TileType::BLASTFURNACE : return "BLASTFURNACE";
         case TileType::WAREHOUSE : return "WAREHOUSE";
+        case TileType::FORESTRY : return "FORESTRY";
         default: return "INVALID_NAME";
     }
 }
@@ -144,6 +147,10 @@ inline std::string getTaskTypeName(TaskType t) {
 		case TaskType::BUILD_FARM: return "Build farm";
 		case TaskType::BUILD_GREENHOUSE: return "Build greenhouse";
 		case TaskType::BUILD_WATERPUMP: return "Build water pump";
+		case TaskType::BUILD_MINE: return "Build mine";
+		case TaskType::BUILD_BLASTFURNACE: return "Build blastfurnace";
+		case TaskType::BUILD_WAREHOUSE: return "Build warehouse";
+		case TaskType::BUILD_FORESTRY: return "Build forestry";
 		default: return "INVALID VALUE";
 	}
 }
