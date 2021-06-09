@@ -4,15 +4,25 @@
 #include "common/resources.h"
 #include <unordered_map>
 
-enum class ErrorCode {
-	OK = 0,
-	MALFORMED_JSON = -1,
-	INVALID_REQUEST = -2,
-	OUT_OF_BOUNDS = -3,
-	NO_PEOPLE_AVAILABLE = -4,
-    INSUFFICIENT_RESOURCES = -5,
-    TASK_ALREADY_STARTED = -6,
-    TASK_ON_WRONG_TILE = -7,
+struct ErrorCode {
+    enum ErrorType {
+    	OK = 0,
+    	MALFORMED_JSON = -1,
+    	INVALID_REQUEST = -2,
+    	OUT_OF_BOUNDS = -3,
+        INVALID_ACTION = -4,
+    };
+    std::string message;
+    ErrorType type;
+
+    inline ErrorCode(ErrorType ty) {
+        this->type = ty;
+    }
+
+    inline ErrorCode(ErrorType ty, std::string msg) {
+        this->type = ty;
+        this->message = msg;
+    }
 };
 
 enum class TaskType {
@@ -29,6 +39,7 @@ enum class TaskType {
 	BUILD_WAREHOUSE,
 	BUILD_ROAD,
 	BUILD_FORESTRY,
+	BUILD_CAPSULE,
 };
 
 enum class TileType {
@@ -50,6 +61,7 @@ enum class TileType {
 	BLASTFURNACE,
 	WAREHOUSE,
 	FORESTRY,
+	CAPSULE,
 };
 
 struct TileMinerals {
@@ -133,6 +145,7 @@ inline std::string getTileTypeName(TileType t) {
         case TileType::BLASTFURNACE : return "BLASTFURNACE";
         case TileType::WAREHOUSE : return "WAREHOUSE";
         case TileType::FORESTRY : return "FORESTRY";
+        case TileType::CAPSULE : return "CAPSULE";
         default: return "INVALID_NAME";
     }
 }
@@ -151,6 +164,7 @@ inline std::string getTaskTypeName(TaskType t) {
 		case TaskType::BUILD_BLASTFURNACE: return "Build blastfurnace";
 		case TaskType::BUILD_WAREHOUSE: return "Build warehouse";
 		case TaskType::BUILD_FORESTRY: return "Build forestry";
+		case TaskType::BUILD_CAPSULE: return "Build capsule";
 		default: return "INVALID VALUE";
 	}
 }

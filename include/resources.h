@@ -12,28 +12,25 @@ struct ResourceValue {
     }
 };
 
-#define DEFAULT_CAPACITY 500
-
 struct Resources {
 	std::unordered_map<std::string, ResourceValue> data = {
-	    {"wood",        {0, DEFAULT_CAPACITY}},
-	    {"stone",       {0, DEFAULT_CAPACITY}},
-	    {"food",        {0, DEFAULT_CAPACITY}},
-	    {"water",       {0, DEFAULT_CAPACITY}},
- 	    {"people",      {0, DEFAULT_CAPACITY}},
- 	    {"peopleIdle",  {0, DEFAULT_CAPACITY}},
- 	    {"peopleSlots", {0, DEFAULT_CAPACITY}},
- 	    {"ironOre",     {0, DEFAULT_CAPACITY}},
- 	    {"copperOre",   {0, DEFAULT_CAPACITY}},
- 	    {"aluminiumOre",{0, DEFAULT_CAPACITY}},
- 	    {"iron",        {0, DEFAULT_CAPACITY}},
- 	    {"copper",      {0, DEFAULT_CAPACITY}},
- 	    {"aluminium",   {0, DEFAULT_CAPACITY}},
- 	    {"silicon",     {0, DEFAULT_CAPACITY}},
- 	    {"oil",         {0, DEFAULT_CAPACITY}},
- 	    {"plastic",     {0, DEFAULT_CAPACITY}},
- 	    {"glass",       {0, DEFAULT_CAPACITY}},
- 	    {"sand",        {0, DEFAULT_CAPACITY}},
+	    {"wood",        {0, 0}},
+	    {"stone",       {0, 0}},
+	    {"food",        {0, 0}},
+	    {"water",       {0, 0}},
+ 	    {"people",      {0, 0}},
+ 	    {"peopleIdle",  {0, 0}},
+ 	    {"ironOre",     {0, 0}},
+ 	    {"copperOre",   {0, 0}},
+ 	    {"aluminiumOre",{0, 0}},
+ 	    {"iron",        {0, 0}},
+ 	    {"copper",      {0, 0}},
+ 	    {"aluminium",   {0, 0}},
+ 	    {"silicon",     {0, 0}},
+ 	    {"oil",         {0, 0}},
+ 	    {"plastic",     {0, 0}},
+ 	    {"glass",       {0, 0}},
+ 	    {"sand",        {0, 0}},
 	};
 
 	inline Resources() {}
