@@ -3,6 +3,7 @@
 #include <jsoncpp/json/json.h>
 #include <string>
 #include <unordered_map>
+#include <iostream>
 
 struct ResourceValue {
     double value;
@@ -11,6 +12,8 @@ struct ResourceValue {
         return this->value == other.value && this->capacity == other.capacity;
     }
 };
+
+#define EPSILON 0.00001
 
 struct Resources {
 	std::unordered_map<std::string, ResourceValue> data = {
@@ -99,6 +102,16 @@ struct Resources {
 	    Resources r;
 	    r.data = std::unordered_map<std::string, ResourceValue>(this->data);
 	    return r;
+	}
+
+	inline bool isZero() {
+	    for (const auto& entry: data) {
+ 	        if (entry.second.value > EPSILON) {
+ 	            std::cout << entry.first << "\n";
+ 	            return false;
+ 	        }
+ 	    }
+ 	    return true;
 	}
 };
 
