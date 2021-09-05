@@ -11,6 +11,9 @@ struct ErrorCode {
     	INVALID_REQUEST = -2,
     	OUT_OF_BOUNDS = -3,
         INVALID_ACTION = -4,
+        INVALID_CREDENTIALS = -5,
+        NOT_AUTHENTICATED = -6,
+        NOT_AUTHORISED = -7,
     };
     std::string message;
     ErrorType type;
