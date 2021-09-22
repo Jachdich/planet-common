@@ -26,6 +26,7 @@ struct ErrorCode {
 };
 
 enum class TaskType {
+    NONE,
 	FELL_TREE,
 	MINE_ROCK,
 	CLEAR,
