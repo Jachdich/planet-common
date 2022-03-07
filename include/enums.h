@@ -1,78 +1,72 @@
 #ifndef __ENUMS_H
 #define __ENUMS_H
-#include <string>
-#include "common/resources.h"
-#include <unordered_map>
+
+extern "C" {
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+enum ErrorType {
+    ERR_OK = 0,
+    ERR_MALFORMED_JSON = -1,
+    ERR_INVALID_REQUEST = -2,
+    ERR_OUT_OF_BOUNDS = -3,
+    ERR_INVALID_ACTION = -4,
+    ERR_INVALID_CREDENTIALS = -5,
+    ERR_NOT_AUTHENTICATED = -6,
+    ERR_NOT_AUTHORISED = -7,
+};
 
 struct ErrorCode {
-    enum ErrorType {
-    	OK = 0,
-    	MALFORMED_JSON = -1,
-    	INVALID_REQUEST = -2,
-    	OUT_OF_BOUNDS = -3,
-        INVALID_ACTION = -4,
-        INVALID_CREDENTIALS = -5,
-        NOT_AUTHENTICATED = -6,
-        NOT_AUTHORISED = -7,
-    };
-    std::string message;
-    ErrorType type;
-
-    inline ErrorCode(ErrorType ty) {
-        this->type = ty;
-    }
-
-    inline ErrorCode(ErrorType ty, std::string msg) {
-        this->type = ty;
-        this->message = msg;
-    }
+    char *message;
+    enum ErrorType type;
 };
 
-enum class TaskType {
-    NONE,
-	FELL_TREE,
-	MINE_ROCK,
-	CLEAR,
-	PLANT_TREE,
-	BUILD_HOUSE,
-	BUILD_FARM,
-	BUILD_GREENHOUSE,
-	BUILD_WATERPUMP,
-	BUILD_MINE,
-	BUILD_BLASTFURNACE,
-	BUILD_WAREHOUSE,
-	BUILD_FORESTRY,
-	BUILD_CAPSULE,
-	BUILD_ROAD,
-	BUILD_PIPE,
-	BUILD_CABLE,
-	BUILD_POWERSTATION,
+enum TaskType {
+    TASK_NONE,
+    TASK_FELL_TREE,
+    TASK_MINE_ROCK,
+    TASK_CLEAR,
+    TASK_PLANT_TREE,
+    TASK_BUILD_HOUSE,
+    TASK_BUILD_FARM,
+    TASK_BUILD_GREENHOUSE,
+    TASK_BUILD_WATERPUMP,
+    TASK_BUILD_MINE,
+    TASK_BUILD_BLASTFURNACE,
+    TASK_BUILD_WAREHOUSE,
+    TASK_BUILD_FORESTRY,
+    TASK_BUILD_CAPSULE,
+    TASK_BUILD_ROAD,
+    TASK_BUILD_PIPE,
+    TASK_BUILD_CABLE,
+    TASK_BUILD_POWERSTATION,
 };
 
-enum class TileType {
-	AIR,
-	GRASS,
-	BUSH,
-	TREE,
-	PINE,
-	WATER,
-	ROCK,
-	HOUSE,
-	PINEFOREST,
-	FOREST,
-	TONK,
-	FARM,
-	GREENHOUSE,
-	WATERPUMP,
-	MINE,
-	BLASTFURNACE,
-	WAREHOUSE,
-	FORESTRY,
-	CAPSULE,
-	ROAD,
-	PIPE,
-	CABLE,
-	POWERSTATION,
+enum TileType {
+	TILE_AIR,
+	TILE_GRASS,
+	TILE_BUSH,
+	TILE_TREE,
+	TILE_PINE,
+	TILE_WATER,
+	TILE_ROCK,
+	TILE_HOUSE,
+	TILE_PINEFOREST,
+	TILE_FOREST,
+	TILE_TONK,
+	TILE_FARM,
+	TILE_GREENHOUSE,
+	TILE_WATERPUMP,
+	TILE_MINE,
+	TILE_BLASTFURNACE,
+	TILE_WAREHOUSE,
+	TILE_FORESTRY,
+	TILE_CAPSULE,
+	TILE_ROAD,
+	TILE_PIPE,
+	TILE_CABLE,
+	TILE_POWERSTATION,
 };
 
 struct TileMinerals {
@@ -82,7 +76,7 @@ struct TileMinerals {
     double aluminium;
 };
 
-inline TileMinerals getTileMinerals(uint32_t colour) {
+inline struct TileMinerals getTileMinerals(uint32_t colour) {
     uint8_t r = (colour >> 16) & 0xFF;
     uint8_t g = (colour >>  8) & 0xFF;
     uint8_t b = (colour >>  0) & 0xFF;
@@ -104,88 +98,88 @@ inline TileMinerals getTileMinerals(uint32_t colour) {
     if (aluminium < 0) aluminium = 0;
     if (aluminium > 1) aluminium = 1;
     
-    return {sand, copper, iron, aluminium};
+    return (struct TileMinerals){sand, copper, iron, aluminium};
 }
 
-inline bool isTree(TileType type) {
+inline bool isTree(enum TileType type) {
 	switch (type) {
-		case TileType::TREE:
-		case TileType::PINE:
-		case TileType::PINEFOREST:
-		case TileType::FOREST:
+		case TILE_TREE:
+		case TILE_PINE:
+		case TILE_PINEFOREST:
+		case TILE_FOREST:
 		return true;
 		default: return false;
 	}
 }
 
-inline bool isMineral(TileType type) {
+inline bool isMineral(enum TileType type) {
 	switch (type) {
-		case TileType::ROCK:
+		case TILE_ROCK:
 		return true;
 		default:
 		return false;
 	}
 }
 
-inline bool isClearable(TileType type) {
+inline bool isClearable(enum TileType type) {
 	switch (type) {
-		case TileType::BUSH:
+		case TILE_BUSH:
 		return true;
 		default:
 		return false;
 	}
 }
 
-inline std::string getTileTypeName(TileType t) {
+inline const char *getTileTypeName(enum TileType t) {
     switch (t) {
-        case TileType::AIR : return "AIR";
-        case TileType::GRASS : return "GRASS";
-        case TileType::BUSH : return "BUSH";
-        case TileType::TREE : return "TREE";
-        case TileType::PINE : return "PINE";
-        case TileType::WATER : return "WATER";
-        case TileType::ROCK : return "ROCK";
-        case TileType::HOUSE : return "HOUSE";
-        case TileType::PINEFOREST : return "PINEFOREST";
-        case TileType::FOREST : return "FOREST";
-        case TileType::TONK : return "TONK";
-        case TileType::FARM : return "FARM";
-        case TileType::GREENHOUSE : return "GREENHOUSE";
-        case TileType::WATERPUMP : return "WATERPUMP";
-        case TileType::MINE : return "MINE";
-        case TileType::BLASTFURNACE : return "BLASTFURNACE";
-        case TileType::WAREHOUSE : return "WAREHOUSE";
-        case TileType::FORESTRY : return "FORESTRY";
-        case TileType::CAPSULE : return "CAPSULE";
-        case TileType::ROAD : return "ROAD";
-        case TileType::PIPE : return "PIPE";
-        case TileType::CABLE : return "CABLE";
-        case TileType::POWERSTATION : return "POWERSTATION";
+        case TILE_AIR : return "AIR";
+        case TILE_GRASS : return "GRASS";
+        case TILE_BUSH : return "BUSH";
+        case TILE_TREE : return "TREE";
+        case TILE_PINE : return "PINE";
+        case TILE_WATER : return "WATER";
+        case TILE_ROCK : return "ROCK";
+        case TILE_HOUSE : return "HOUSE";
+        case TILE_PINEFOREST : return "PINEFOREST";
+        case TILE_FOREST : return "FOREST";
+        case TILE_TONK : return "TONK";
+        case TILE_FARM : return "FARM";
+        case TILE_GREENHOUSE : return "GREENHOUSE";
+        case TILE_WATERPUMP : return "WATERPUMP";
+        case TILE_MINE : return "MINE";
+        case TILE_BLASTFURNACE : return "BLASTFURNACE";
+        case TILE_WAREHOUSE : return "WAREHOUSE";
+        case TILE_FORESTRY : return "FORESTRY";
+        case TILE_CAPSULE : return "CAPSULE";
+        case TILE_ROAD : return "ROAD";
+        case TILE_PIPE : return "PIPE";
+        case TILE_CABLE : return "CABLE";
+        case TILE_POWERSTATION : return "POWERSTATION";
         default: return "INVALID_NAME";
     }
 }
 
-inline std::string getTaskTypeName(TaskType t) {
+inline const char *getTaskTypeName(enum TaskType t) {
 	switch (t) {
-		case TaskType::FELL_TREE: return "Fell tree";
-		case TaskType::MINE_ROCK: return "Mine minerals";
-		case TaskType::CLEAR: return "Clear everything";
-		case TaskType::PLANT_TREE: return "Plant a tree";
-		case TaskType::BUILD_HOUSE: return "Build house";
-		case TaskType::BUILD_FARM: return "Build farm";
-		case TaskType::BUILD_GREENHOUSE: return "Build greenhouse";
-		case TaskType::BUILD_WATERPUMP: return "Build water pump";
-		case TaskType::BUILD_MINE: return "Build mine";
-		case TaskType::BUILD_BLASTFURNACE: return "Build blastfurnace";
-		case TaskType::BUILD_WAREHOUSE: return "Build warehouse";
-		case TaskType::BUILD_FORESTRY: return "Build forestry";
-		case TaskType::BUILD_CAPSULE: return "Build capsule";
-		case TaskType::BUILD_ROAD: return "Build road";
-		case TaskType::BUILD_PIPE: return "Build pipe";
-		case TaskType::BUILD_CABLE: return "Build cable";
-		case TaskType::BUILD_POWERSTATION: return "Build powerstation";
+		case TASK_FELL_TREE: return "Fell tree";
+		case TASK_MINE_ROCK: return "Mine minerals";
+		case TASK_CLEAR: return "Clear everything";
+		case TASK_PLANT_TREE: return "Plant a tree";
+		case TASK_BUILD_HOUSE: return "Build house";
+		case TASK_BUILD_FARM: return "Build farm";
+		case TASK_BUILD_GREENHOUSE: return "Build greenhouse";
+		case TASK_BUILD_WATERPUMP: return "Build water pump";
+		case TASK_BUILD_MINE: return "Build mine";
+		case TASK_BUILD_BLASTFURNACE: return "Build blastfurnace";
+		case TASK_BUILD_WAREHOUSE: return "Build warehouse";
+		case TASK_BUILD_FORESTRY: return "Build forestry";
+		case TASK_BUILD_CAPSULE: return "Build capsule";
+		case TASK_BUILD_ROAD: return "Build road";
+		case TASK_BUILD_PIPE: return "Build pipe";
+		case TASK_BUILD_CABLE: return "Build cable";
+		case TASK_BUILD_POWERSTATION: return "Build powerstation";
 		default: return "INVALID VALUE";
 	}
 }
-
+}
 #endif
