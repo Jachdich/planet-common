@@ -17,6 +17,11 @@ struct ResourceValue {
     double capacity;
 };
 
+//when a type is needed
+struct ResourceItem {
+    int type;
+    double val;
+};
 
 enum {
     RES_WOOD = 0,
@@ -88,6 +93,14 @@ inline struct Resources res_from_vals(struct ResourceValue values[NUM_RESOURCES]
     for (int i = 0; i < NUM_RESOURCES; i++) {
        res.values[i].value = values[i].value;
     }
+    return res;
+}
+
+inline struct Resources res_from_items(struct ResourceItem items[NUM_RESOURCES]) {
+    struct Resources res = res_init();
+    // for (int i = 0; i < NUM_RESOURCES; i++) {
+       // res.values[i].value = values[i].value;
+    // }
     return res;
 }
 
