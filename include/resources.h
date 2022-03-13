@@ -8,6 +8,10 @@
 #define NUM_RESOURCES 17
 
 extern "C" {
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 struct ResourceValue {
     double value;
     double capacity;
@@ -76,6 +80,7 @@ inline struct Resources res_init() {
         res.values[i] = (ResourceValue){0, 0};
     }
     res.names = res_names;
+    return res;
 }
 
 inline struct Resources res_from_vals(struct ResourceValue values[NUM_RESOURCES]) {
@@ -95,7 +100,7 @@ inline struct Resources res_from_doubles(double values[NUM_RESOURCES]) {
 }
 
 inline char *res_to_string(struct Resources *res) {
-    char *ret = malloc(64 * NUM_RESOURCES); //TODO maybe a bad idea to hard code this
+    char *ret = (char*)malloc(64 * NUM_RESOURCES); //TODO maybe a bad idea to hard code this
     char *ptr = ret;
 	for (int i = 0; i < NUM_RESOURCES; i++) {
         ptr += sprintf(ptr, "%s: %lf/%lf, ", res->names[i], res->values[i].value, res->values[i].capacity);
@@ -138,7 +143,7 @@ inline void res_sub(struct Resources *a, struct Resources *b) {
 inline struct Resources res_clone(struct Resources *res) {
     struct Resources ret = res_init();
     memcpy(ret.values, res->values, NUM_RESOURCES * sizeof(res->values[0]));
-    ret.
+    return ret;
 }
 
 inline bool res_is_zero(struct Resources *res) {

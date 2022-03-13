@@ -1,9 +1,11 @@
 #ifndef __SURFACELOCATOR_H
 #define __SURFACELOCATOR_H
 #include <jsoncpp/json/json.h>
+
+extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
-extern "C" {
+
 struct SurfaceLocator {
 	uint8_t planetPos;
 	uint8_t starPos;
@@ -26,13 +28,13 @@ inline struct SurfaceLocator getSurfaceLocatorFromJson(Json::Value root) {
 	secY = root.get("secY", 0).asInt();
 	starPos = root.get("starPos", 0).asInt();
 	planetPos = root.get("planetPos", 0).asInt();
-	return {planetPos, starPos, secX, secY};
+	return (struct SurfaceLocator){planetPos, starPos, secX, secY};
 }
 
-inline void getJsonFromSurfaceLocator(SurfaceLocator loc, Json::Value& root) {
-	root["secX"] = loc.sectorX;
-	root["secY"] = loc.sectorY;
-	root["starPos"] = loc.starPos;
-	root["planetPos"] = loc.planetPos;
+inline void getJsonFromSurfaceLocator(struct SurfaceLocator *loc, Json::Value& root) {
+	root["secX"] = loc->sectorX;
+	root["secY"] = loc->sectorY;
+	root["starPos"] = loc->starPos;
+	root["planetPos"] = loc->planetPos;
 }
 #endif
