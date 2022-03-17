@@ -1,4 +1,5 @@
-common.a
+libcommon.a
+libcommon-dev.a
 obj
 src_just_in_case
 log.txt

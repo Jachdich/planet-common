@@ -13,7 +13,7 @@ struct SurfaceLocator {
 	int32_t sectorY;
 };
 
-bool locator_eq(const struct SurfaceLocator *a, const struct SurfaceLocator *b) {
+inline bool locator_eq(const struct SurfaceLocator *a, const struct SurfaceLocator *b) {
     return a->sectorX == b->sectorX &&
            a->sectorY == b->sectorY &&
            a->starPos == b->starPos &&
@@ -31,7 +31,7 @@ inline struct SurfaceLocator getSurfaceLocatorFromJson(Json::Value root) {
 	return (struct SurfaceLocator){planetPos, starPos, secX, secY};
 }
 
-inline void getJsonFromSurfaceLocator(struct SurfaceLocator *loc, Json::Value& root) {
+inline void getJsonFromSurfaceLocator(const struct SurfaceLocator *loc, Json::Value& root) {
 	root["secX"] = loc->sectorX;
 	root["secY"] = loc->sectorY;
 	root["starPos"] = loc->starPos;

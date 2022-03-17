@@ -1,16 +1,18 @@
 #ifndef __RESOURCES_H
 #define __RESOURCES_H
-#include <jsoncpp/json/json.h>
-#include <string>
-#include <unordered_map>
-#include <iostream>
 #define EPSILON 0.00001
 #define NUM_RESOURCES 17
 
+#ifdef __cplusplus
+#include <jsoncpp/json/json.h>
 extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 struct ResourceValue {
     double value;
@@ -43,131 +45,31 @@ enum {
     RES_SAND,
 };
 
-const char *res_names[] = {
-    "Wood",
-    "Stone",
-    "Food",
-    "Water",
-    "People",
-    "Idle People",
-    "Iron Ore",
-    "Copper Ore",
-    "Aluminium Ore",
-    "Iron",
-    "Copper",
-    "Aluminium",
-    "Silicon",
-    "Oil",
-    "Plastic",
-    "Glass",
-    "Sand",
-};
-
-const char *res_id_to_json_key(int a) {
-    return res_names[a];
-}
-
-int res_json_key_to_id(const char *key) {
-    for (int i = 9; i < NUM_RESOURCES; i++) {
-        if (strcmp(res_names[i], key) == 0) return i;
-    }
-    return -1;
-}
 
 struct Resources {
 	struct ResourceValue values[NUM_RESOURCES];
 	const char **names;
 };
 
-inline struct Resources res_init() {
-    struct Resources res;
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-        res.values[i] = (ResourceValue){0, 0};
-    }
-    res.names = res_names;
-    return res;
-}
 
-inline struct Resources res_from_vals(struct ResourceValue values[NUM_RESOURCES]) {
-    struct Resources res = res_init();
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-       res.values[i].value = values[i].value;
-    }
-    return res;
-}
+extern const char *res_names[];
 
-inline struct Resources res_from_items(struct ResourceItem items[NUM_RESOURCES]) {
-    struct Resources res = res_init();
-    // for (int i = 0; i < NUM_RESOURCES; i++) {
-       // res.values[i].value = values[i].value;
-    // }
-    return res;
-}
+const char *res_id_to_json_key(int a);
+int res_json_key_to_id(const char *key);
+struct Resources res_init();
+struct Resources res_from_vals(struct ResourceValue values[NUM_RESOURCES]);
+struct Resources res_from_items(struct ResourceItem *items, size_t num);
+struct Resources res_from_doubles(double values[NUM_RESOURCES]);
+char *res_to_string(struct Resources *res);
+bool res_eq(struct Resources *a, struct Resources *b);
+bool res_ge(struct Resources *a, struct Resources *b);
+bool res_ne(struct Resources *a, struct Resources *b);
+void res_add(struct Resources *a, struct Resources *b);
+void res_sub(struct Resources *a, struct Resources *b);
+struct Resources res_clone(struct Resources *res);
+bool res_is_zero(struct Resources *res);
 
-inline struct Resources res_from_doubles(double values[NUM_RESOURCES]) {
-    struct Resources res = res_init();
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-       res.values[i].value = values[i];
-    }
-    return res;
-}
-
-inline char *res_to_string(struct Resources *res) {
-    char *ret = (char*)malloc(64 * NUM_RESOURCES); //TODO maybe a bad idea to hard code this
-    char *ptr = ret;
-	for (int i = 0; i < NUM_RESOURCES; i++) {
-        ptr += sprintf(ptr, "%s: %lf/%lf, ", res->names[i], res->values[i].value, res->values[i].capacity);
-    }
-    return ret;
-}
-
-inline bool res_eq(struct Resources *a, struct Resources *b)  {
-    bool result;
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-        result = result && (a->values[i].value == b->values[i].value);
-    }
-    return result;
-}
-
-inline bool res_ge(struct Resources *a, struct Resources *b)  {
-    bool result;
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-        result = result && (a->values[i].value >= b->values[i].value);
-    }
-    return result;
-}
-
-inline bool res_ne(struct Resources *a, struct Resources *b)  {
-    return !res_eq(a, b);
-}
-
-inline void res_add(struct Resources *a, struct Resources *b) {
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-        a->values[i].value += b->values[i].value;
-    }
-}
-
-inline void res_sub(struct Resources *a, struct Resources *b) {
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-        a->values[i].value -= b->values[i].value;
-    }
-}
-
-inline struct Resources res_clone(struct Resources *res) {
-    struct Resources ret = res_init();
-    memcpy(ret.values, res->values, NUM_RESOURCES * sizeof(res->values[0]));
-    return ret;
-}
-
-inline bool res_is_zero(struct Resources *res) {
-    for (int i = 0; i < NUM_RESOURCES; i++) {
-        if (res->values[i].value > EPSILON) {
-            return false;
-        }
-    }
-    return true;
-}
-
+#ifdef __cplusplus
 }
 
 inline struct Resources res_from_json(Json::Value root) {
@@ -180,7 +82,7 @@ inline struct Resources res_from_json(Json::Value root) {
     return n;
 }
 
-inline void res_to_json_in_place(struct Resources *res, Json::Value& root) {
+inline void res_to_json_in_place(const struct Resources *res, Json::Value& root) {
     for (int i = 0; i < NUM_RESOURCES; i++) {
         std::string key(res_id_to_json_key(i));
         root[key]["value"]    = res->values[i].value;
@@ -188,10 +90,10 @@ inline void res_to_json_in_place(struct Resources *res, Json::Value& root) {
     }
 }
 
-inline Json::Value res_to_json(struct Resources *res) {
+inline Json::Value res_to_json(const struct Resources *res) {
     Json::Value root;
     res_to_json_in_place(res, root);
     return root;
 }
-
+#endif //__cplusplus
 #endif
