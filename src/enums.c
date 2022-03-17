@@ -1,7 +1,15 @@
 #include "../include/enums.h"
 
 struct ErrorCode err_new(const enum ErrorType type, const char *message) {
-    return (struct ErrorCode){type, strdup(message)};
+    if (message != NULL) {
+        return (struct ErrorCode){type, strdup(message)};
+    } else {
+        return (struct ErrorCode){type, NULL};
+    }
+}
+
+void err_free(const struct ErrorCode *ec) {
+    if (ec->message != NULL) free(ec->message);
 }
 
 struct TileMinerals getTileMinerals(uint32_t colour) {

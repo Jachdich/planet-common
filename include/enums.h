@@ -82,6 +82,7 @@ struct TileMinerals {
 };
 
 struct ErrorCode err_new(const enum ErrorType type, const char *message);
+void err_free(const struct ErrorCode *ec);
 struct TileMinerals getTileMinerals(uint32_t colour);
 bool isTree(enum TileType type);
 bool isMineral(enum TileType type);

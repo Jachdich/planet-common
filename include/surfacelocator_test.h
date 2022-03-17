@@ -35,11 +35,11 @@ inline PlanetSurface *getSurfaceFromJson(Json::Value root) {
 #include "sectorcache.h"
 inline PlanetSurface *getSurfaceFromJson(Json::Value root, SectorCache * cache) {
 	SurfaceLocator loc = getSurfaceLocatorFromJson(root);
-	Sector *sec = cache->getSectorAt(loc->sectorX, loc->sectorY);
-	if (loc->starPos < sec->numStars) {
-		Star *s = &sec->stars[loc->starPos];
-		if (loc->planetPos < s->num) {
-			Planet *p = &s->planets[loc->planetPos];
+	Sector *sec = cache->getSectorAt(loc.sectorX, loc.sectorY);
+	if (loc.starPos < sec->numStars) {
+		Star *s = &sec->stars[loc.starPos];
+		if (loc.planetPos < s->num) {
+			Planet *p = &s->planets[loc.planetPos];
 			PlanetSurface *surf = p->surface;
 			return surf;
 		} else {
