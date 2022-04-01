@@ -3,3 +3,9 @@ libcommon-dev.a
 obj
 src_just_in_case
 log.txt
+
+
+# Added by cargo
+
+/target
+libcommon-dbg.a

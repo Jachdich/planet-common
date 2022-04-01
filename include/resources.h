@@ -1,7 +1,6 @@
 #ifndef __RESOURCES_H
 #define __RESOURCES_H
 #define EPSILON 0.00001
-#define NUM_RESOURCES 17
 
 #ifdef __cplusplus
 #include <jsoncpp/json/json.h>
@@ -43,12 +42,12 @@ enum {
     RES_PLASTIC,
     RES_GLASS,
     RES_SAND,
+    NUM_RESOURCES
 };
 
 
 struct Resources {
 	struct ResourceValue values[NUM_RESOURCES];
-	const char **names;
 };
 
 
