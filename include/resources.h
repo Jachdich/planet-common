@@ -1,145 +1,98 @@
 #ifndef __RESOURCES_H
 #define __RESOURCES_H
+#define EPSILON 0.00001
+
+#ifdef __cplusplus
 #include <jsoncpp/json/json.h>
-#include <string>
-#include <unordered_map>
-#include <iostream>
+extern "C" {
+#endif
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 struct ResourceValue {
     double value;
     double capacity;
-    inline bool operator==(const ResourceValue &other) {
-        return this->value == other.value && this->capacity == other.capacity;
-    }
 };
 
-#define EPSILON 0.00001
+//when a type is needed
+struct ResourceItem {
+    int type;
+    double val;
+};
+
+enum {
+    RES_WOOD = 0,
+    RES_STONE,
+    RES_FOOD,
+    RES_WATER,
+    RES_PEOPLE,
+    RES_PEOPLE_IDLE,
+    RES_IRON_ORE,
+    RES_COPPER_ORE,
+    RES_ALUMINIUM_ORE,
+    RES_IRON,
+    RES_COPPER,
+    RES_ALUMINIUM,
+    RES_SILICON,
+    RES_OIL,
+    RES_PLASTIC,
+    RES_GLASS,
+    RES_SAND,
+    NUM_RESOURCES
+};
+
 
 struct Resources {
-	std::unordered_map<std::string, ResourceValue> data = {
-	    {"wood",        {0, 0}},
-	    {"stone",       {0, 0}},
-	    {"food",        {0, 0}},
-	    {"water",       {0, 0}},
- 	    {"people",      {0, 0}},
- 	    {"peopleIdle",  {0, 0}},
- 	    {"ironOre",     {0, 0}},
- 	    {"copperOre",   {0, 0}},
- 	    {"aluminiumOre",{0, 0}},
- 	    {"iron",        {0, 0}},
- 	    {"copper",      {0, 0}},
- 	    {"aluminium",   {0, 0}},
- 	    {"silicon",     {0, 0}},
- 	    {"oil",         {0, 0}},
- 	    {"plastic",     {0, 0}},
- 	    {"glass",       {0, 0}},
- 	    {"sand",        {0, 0}},
-	};
-
-	inline Resources() {}
-
-	inline Resources(std::unordered_map<std::string, double> binds) {
-	    for (auto entry: binds) {
-           data[entry.first].value = entry.second;
-         }
-	}
-
-	inline Resources(std::unordered_map<std::string, ResourceValue> binds) {
-        for (auto entry: binds) {
-          data[entry.first] = entry.second;
-        }
-    }
-	
-    inline std::string toString() {
-        std::string res;
-    	for (const auto& entry: data) {
-            res += entry.first + ": " + std::to_string(entry.second.value) + "/" + std::to_string(entry.second.capacity) + ", ";
-        }
-        return res;
-	}
-
-	inline bool operator==(Resources& other) const {
-	    bool result;
-    	for (auto& entry: data) {
-	        result = result && (entry.second.value == other.data[entry.first].value);
-	    }
-	    return result;
-	}
-
-    inline bool operator>=(Resources& other) const {
-	    bool result = true;
-    	for (auto& entry: data) {
-	        result = result && (entry.second.value >= other.data[entry.first].value); //TODO use epsilon?
-	    }
-	    return result;
-	}
-	
-	inline bool operator!=(Resources& other) const {
-		return !(*this == other);
-	}
-
-	inline void operator+=(Resources& other) {
-    	for (const auto& entry: data) {
-	        this->data[entry.first].value += other.data[entry.first].value;
-	    }   
-	}
-	
-	inline void operator-=(Resources& other) {
-    	for (const auto& entry: data) {
-	        this->data[entry.first].value -= other.data[entry.first].value;
-	    }
-	}
-
-	inline double& operator[](const std::string &key) {
-	    return data[key].value;
-	}
-
-	inline double& getCapacity(const std::string &key) {
-        return data[key].capacity;
-	}
-
-	inline Resources clone() {
-	    Resources r;
-	    r.data = std::unordered_map<std::string, ResourceValue>(this->data);
-	    return r;
-	}
-
-	inline bool isZero() {
-	    for (const auto& entry: data) {
- 	        if (entry.second.value > EPSILON) {
- 	            std::cout << entry.first << "\n";
- 	            return false;
- 	        }
- 	    }
- 	    return true;
-	}
+	struct ResourceValue values[NUM_RESOURCES];
 };
 
 
-inline Resources getResourcesFromJson(Json::Value root) {
-    Resources n;
-    for (const auto& entry: n.data) {
-	    n.data[entry.first].value = root[entry.first]["value"].asDouble();
-	    n.data[entry.first].capacity = root[entry.first]["capacity"].asDouble();
+extern const char *res_names[];
+
+const char *res_id_to_json_key(int a);
+int res_json_key_to_id(const char *key);
+struct Resources res_init();
+struct Resources res_from_vals(struct ResourceValue values[NUM_RESOURCES]);
+struct Resources res_from_items(struct ResourceItem *items, size_t num);
+struct Resources res_from_doubles(double values[NUM_RESOURCES]);
+char *res_to_string(struct Resources *res);
+bool res_eq(struct Resources *a, struct Resources *b);
+bool res_ge(struct Resources *a, struct Resources *b);
+bool res_ne(struct Resources *a, struct Resources *b);
+void res_add(struct Resources *a, struct Resources *b);
+void res_sub(struct Resources *a, struct Resources *b);
+struct Resources res_clone(struct Resources *res);
+bool res_is_zero(struct Resources *res);
+
+#ifdef __cplusplus
+}
+
+inline struct Resources res_from_json(Json::Value root) {
+    struct Resources n = res_init();
+    for (int i = 0; i < NUM_RESOURCES; i++) {
+        std::string key(res_id_to_json_key(i));
+	    n.values[i].value = root[key]["value"].asDouble();
+	    n.values[i].capacity = root[key]["capacity"].asDouble();
 	}
     return n;
 }
 
-inline Json::Value getJsonFromResources(Resources stats) {
-    Json::Value root;
-    for (const auto& entry: stats.data) {
-        root[entry.first]["value"] = entry.second.value;
-        root[entry.first]["capacity"] = entry.second.capacity;
+inline void res_to_json_in_place(const struct Resources *res, Json::Value& root) {
+    for (int i = 0; i < NUM_RESOURCES; i++) {
+        std::string key(res_id_to_json_key(i));
+        root[key]["value"]    = res->values[i].value;
+        root[key]["capacity"] = res->values[i].capacity;
     }
-    
+}
+
+inline Json::Value res_to_json(const struct Resources *res) {
+    Json::Value root;
+    res_to_json_in_place(res, root);
     return root;
 }
-
-inline void getJsonFromResources(Resources stats, Json::Value& root) {
-    for (const auto& entry: stats.data) {
-        root[entry.first]["value"] = entry.second.value;
-        root[entry.first]["capacity"] = entry.second.capacity;
-    }
-}
-
+#endif //__cplusplus
 #endif
