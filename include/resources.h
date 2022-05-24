@@ -42,6 +42,8 @@ enum {
     RES_PLASTIC,
     RES_GLASS,
     RES_SAND,
+    RES_ELECTRICITY,
+    RES_RESEARCH,
     NUM_RESOURCES
 };
 

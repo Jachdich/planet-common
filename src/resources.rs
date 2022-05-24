@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::option::Option;
 
-const NUM_RESOURCES: usize = 17;
+const NUM_RESOURCES: usize = 19;
 const EPSILON: f64 = 0.00001;
 
 #[repr(C)]
@@ -51,6 +51,8 @@ const RES_NAMES: [&str; NUM_RESOURCES] = [
     "Plastic",
     "Glass",
     "Sand",
+    "Electricity",
+    "Research Points",
 ];
 
 impl std::ops::AddAssign for Resources {

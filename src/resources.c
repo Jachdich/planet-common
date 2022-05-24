@@ -18,6 +18,8 @@ const char *res_names[] = {
     "Plastic",
     "Glass",
     "Sand",
+    "Electricity",
+    "Research Points",
 };
 
 const char *res_id_to_json_key(int a) {
