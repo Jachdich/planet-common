@@ -6,21 +6,21 @@ const EPSILON: f64 = 0.00001;
 
 #[repr(C)]
 #[derive(Debug)]
-struct ResourceValue {
-    value: f64,
-    capacity: f64,
+pub struct ResourceValue {
+    pub value: f64,
+    pub capacity: f64,
 }
 
 #[repr(C)]
-struct ResourceItem {
-    restype: i32,
-    val: f64,
+pub struct ResourceItem {
+    pub restype: i32,
+    pub val: f64,
 }
 
 #[repr(C)]
 #[derive(Debug)]
-struct Resources {
-    values: [ResourceValue; NUM_RESOURCES]
+pub struct Resources {
+    pub values: [ResourceValue; NUM_RESOURCES]
 }
 
 /*enum ResourceType {
@@ -33,7 +33,7 @@ struct Resources {
     IronOre,
 }*/
 
-const RES_NAMES: [&str; NUM_RESOURCES] = [
+pub const RES_NAMES: [&str; NUM_RESOURCES] = [
     "Wood",
     "Stone",
     "Food",
