@@ -10,3 +10,5 @@ name = "common"
 crate-type = ["staticlib", "rlib"]
 
 [dependencies]
+serde = "*"
+serde_json = "*"

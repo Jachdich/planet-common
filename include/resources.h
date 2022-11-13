@@ -76,18 +76,16 @@ bool res_is_zero(struct Resources *res);
 inline struct Resources res_from_json(Json::Value root) {
     struct Resources n = res_init();
     for (int i = 0; i < NUM_RESOURCES; i++) {
-        std::string key(res_id_to_json_key(i));
-	    n.values[i].value = root[key]["value"].asDouble();
-	    n.values[i].capacity = root[key]["capacity"].asDouble();
+      n.values[i].value    = root[i][0].asDouble();
+	    n.values[i].capacity = root[i][1].asDouble();
 	}
     return n;
 }
 
 inline void res_to_json_in_place(const struct Resources *res, Json::Value& root) {
     for (int i = 0; i < NUM_RESOURCES; i++) {
-        std::string key(res_id_to_json_key(i));
-        root[key]["value"]    = res->values[i].value;
-        root[key]["capacity"] = res->values[i].capacity;
+        root[i][0] = res->values[i].value;
+        root[i][1] = res->values[i].capacity;
     }
 }
 
