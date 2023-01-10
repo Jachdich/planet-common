@@ -40,7 +40,7 @@ inline PlanetSurface *getSurfaceFromJson(Json::Value root, SectorCache * cache) 
 		Star *s = &sec->stars[loc.starPos];
 		if (loc.planetPos < s->num) {
 			Planet *p = &s->planets[loc.planetPos];
-			PlanetSurface *surf = p->surface;
+			PlanetSurface *surf = &p->surface;
 			return surf;
 		} else {
 			return NULL;
